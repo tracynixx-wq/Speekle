@@ -17,7 +17,7 @@
     $("top-title").textContent=page==="chats"?"Чаты":page==="contacts"?"Контакты":page==="profile"?"Профиль":"Настройки";
     document.querySelectorAll(".nav-button").forEach(b=>b.classList.toggle("active",b.dataset.page===page));
     $("top-left").textContent=page==="chats"?(editMode?"Готово":"Изм."):"";
-    $("search-panel").hidden=true;
+    $("search-panel").hidden=page!=="chats";
     if(page==="contacts")loadContacts();
   }
   async function showSession(){
