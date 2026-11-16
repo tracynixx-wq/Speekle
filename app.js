@@ -13,7 +13,7 @@
   function avatar(name,kind=""){const el=document.createElement("div");el.className="chat-avatar "+kind;el.textContent=initials(name);return el;}
   function showPage(page){
     ["chats","contacts","profile","settings"].forEach(name=>{const el=$(name+"-page");if(el)el.hidden=name!==page;});
-    $("conversation-page").hidden=true;$("bottom-nav").hidden=false;
+    $("conversation-page").hidden=true;$("bottom-nav").hidden=false;$("app").querySelector(".topbar").hidden=page!=="chats";
     $("top-title").textContent=page==="chats"?"Чаты":page==="contacts"?"Контакты":page==="profile"?"Профиль":"Настройки";
     document.querySelectorAll(".nav-button").forEach(b=>b.classList.toggle("active",b.dataset.page===page));
     $("top-left").textContent=page==="chats"?(editMode?"Готово":"Изм."):"";
