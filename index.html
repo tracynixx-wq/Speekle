@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
-  <meta name="theme-color" content="#ffffff">
+  <meta name="theme-color" content="#0b0b0d">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <style>html,body{touch-action:pan-x pan-y;overscroll-behavior:none}</style>
@@ -77,34 +77,68 @@
         <div id="contact-list" class="contact-list"></div>
       </section>
 
-      <section id="settings-page" class="page" hidden>
-        <div class="profile-hero">
+      <section id="profile-page" class="page profile-page" hidden>
+        <div class="profile-cover">
+          <div class="profile-cover-shade"></div>
           <div id="profile-avatar" class="profile-avatar">S</div>
-          <h1 id="profile-name">Имя</h1>
-          <p id="profile-handle">@username</p>
+          <div class="profile-cover-info">
+            <h1 id="profile-name">Имя</h1>
+            <p class="online-line"><i></i> был(а) недавно</p>
+            <p id="profile-handle">@username</p>
+          </div>
         </div>
-        <div class="settings-group profile-edit-group">
-          <button class="setting-row blue-row" id="choose-avatar-button"><span class="setting-icon camera-icon">◎</span><span>Выбрать фотографию</span><span class="chevron">›</span></button>
-          <button class="setting-row blue-row" id="edit-profile-button"><span class="setting-icon user-icon">＠</span><span>Изменить имя и юзернейм</span><span class="chevron">›</span></button>
-          <div class="setting-row"><span class="setting-icon user-icon">＠</span><span id="settings-username">@username</span></div>
+        <button class="profile-edit-button" id="edit-profile-button"><span>✎</span> Редактировать профиль</button>
+        <div class="profile-switcher">
+          <div class="profile-switcher-title">Смена профиля <span>♙</span></div>
+          <div class="profile-account">
+            <div id="profile-small-avatar" class="chat-avatar">S</div>
+            <div><strong id="profile-account-name">Имя</strong><small id="profile-account-email"></small></div>
+            <b>✓</b>
+          </div>
+          <button id="add-profile-button" class="add-profile-button">＋ Добавить профиль</button>
         </div>
+      </section>
+
+      <section id="settings-page" class="page settings-page" hidden>
+        <header class="settings-heading">
+          <div><small>MESSAGE</small><h1>Настройки</h1></div>
+          <div class="settings-user"><div id="settings-avatar" class="chat-avatar">S</div><div><strong id="settings-name">Имя</strong><small id="settings-handle">@username</small></div><span>✓</span></div>
+        </header>
+        <h2 class="settings-label">АККАУНТ</h2>
         <div class="settings-group">
-          <button class="setting-row" data-setting="Избранное"><span class="setting-icon bookmark-icon">▮</span><span>Избранное</span><span class="chevron">›</span></button>
-          <button class="setting-row" data-setting="Недавние звонки"><span class="setting-icon phone-icon">☎</span><span>Недавние звонки</span><span class="chevron">›</span></button>
-          <button class="setting-row" data-setting="Устройства"><span class="setting-icon device-icon">▣</span><span>Устройства</span><span class="chevron">›</span></button>
-          <button class="setting-row" data-setting="Папки с чатами"><span class="setting-icon folder-icon">▰</span><span>Папки с чатами</span><span class="chevron">›</span></button>
+          <button class="setting-row" id="settings-profile-button"><span class="setting-icon">♙</span><span>Профиль</span><span class="chevron">›</span></button>
+          <button class="setting-row" data-setting="Устройства и сеансы"><span class="setting-icon">▣</span><span>Устройства и сеансы</span><span class="chevron">›</span></button>
+          <button class="setting-row" data-setting="Папки и организация"><span class="setting-icon">▱</span><span>Папки и организация</span><span class="chevron">−</span></button>
         </div>
+        <h2 class="settings-label">ВНЕШНИЙ ВИД</h2>
         <div class="settings-group">
-          <button class="setting-row" data-setting="Уведомления и звуки"><span class="setting-icon bell-icon">♟</span><span>Уведомления и звуки</span><span class="chevron">›</span></button>
-          <button class="setting-row" data-setting="Конфиденциальность"><span class="setting-icon lock-icon">▣</span><span>Конфиденциальность</span><span class="chevron">›</span></button>
-          <button class="setting-row" data-setting="Данные и память"><span class="setting-icon data-icon">▤</span><span>Данные и память</span><span class="chevron">›</span></button>
-          <button class="setting-row" data-setting="Оформление"><span class="setting-icon theme-icon">◐</span><span>Оформление</span><span class="chevron">›</span></button>
-          <button class="setting-row" data-setting="Энергосбережение"><span class="setting-icon battery-icon">▱</span><span>Энергосбережение</span><span class="chevron">›</span></button>
-          <button class="setting-row" data-setting="Язык"><span class="setting-icon language-icon">◎</span><span>Язык</span><span class="setting-value">Русский</span><span class="chevron">›</span></button>
+          <button class="setting-row" data-setting="Оформление чатов"><span class="setting-icon">◔</span><span>Оформление чатов</span><span class="chevron">›</span></button>
+          <div class="setting-card"><div class="setting-card-title"><span class="setting-icon">☷</span>Тема приложения</div>
+            <div class="theme-switch" id="theme-switch"><button data-theme="auto">Авто</button><button data-theme="light">Светлая</button><button data-theme="dark" class="selected">Тёмная</button></div>
+          </div>
+          <div class="setting-card"><div class="setting-card-title"><span class="setting-icon">◉</span>Акцентный цвет</div>
+            <div class="accent-colors"><button data-accent="#d94691" style="--swatch:#d94691" aria-label="Розовый"></button><button data-accent="#3984ed" style="--swatch:#3984ed" aria-label="Синий"></button><button data-accent="#2da65a" style="--swatch:#2da65a" aria-label="Зелёный"></button><button data-accent="#ed7900" style="--swatch:#ed7900" aria-label="Оранжевый"></button><button data-accent="#e7473e" style="--swatch:#e7473e" aria-label="Красный"></button><button data-accent="#9653df" class="selected" style="--swatch:#9653df" aria-label="Фиолетовый"></button><button data-accent="#13a3b5" style="--swatch:#13a3b5" aria-label="Бирюзовый"></button><button data-accent="#d23d83" style="--swatch:#d23d83" aria-label="Малиновый"></button></div>
+          </div>
         </div>
+        <h2 class="settings-label">ДАННЫЕ</h2>
         <div class="settings-group">
-          <button class="setting-row" id="logout-button"><span class="setting-icon logout-icon">↪</span><span>Выйти из аккаунта</span><span class="chevron">›</span></button>
+          <button class="setting-row" data-setting="Политика конфиденциальности"><span class="setting-icon">♢</span><span>Политика конфиденциальности</span><span class="chevron">›</span></button>
+          <button class="setting-row" data-setting="Резервная копия ключа"><span class="setting-icon">▤</span><span>Резервная копия ключа</span><span class="chevron">›</span></button>
+          <button class="setting-row" data-setting="Специальные возможности"><span class="setting-icon">☷</span><span>Специальные возможности</span><span class="chevron">›</span></button>
+          <button class="setting-row" data-setting="Помощь и диагностика"><span class="setting-icon">?</span><span>Помощь и диагностика</span><span class="chevron">›</span></button>
         </div>
+        <h2 class="settings-label">БЕЗОПАСНОСТЬ И КОНФИДЕНЦИАЛЬНОСТЬ</h2>
+        <div class="settings-group">
+          <div class="setting-row"><span class="setting-icon">♢</span><span>Шифрование переписки</span><span class="setting-value">Включено</span></div>
+          <button class="setting-row" data-setting="Ключ и восстановление"><span class="setting-icon">⚿</span><span>Ключ и восстановление</span><span class="chevron">›</span></button>
+        </div>
+        <h2 class="settings-label">УВЕДОМЛЕНИЯ</h2>
+        <div class="settings-group">
+          <div class="setting-row"><span class="setting-icon">♧</span><span>Push-уведомления</span><span class="setting-value">Включены</span></div>
+          <button class="setting-row" data-setting="Проверить уведомление"><span class="setting-icon">♧</span><span>Проверить уведомление</span><span class="chevron">›</span></button>
+        </div>
+        <p class="settings-note">Ключ шифрования хранится на этом устройстве. Для входа с другого телефона понадобится ключевая фраза.</p>
+        <button class="logout-button" id="logout-button">⇥　Выйти из аккаунта</button>
       </section>
 
       <section id="conversation-page" class="conversation-page" hidden>
