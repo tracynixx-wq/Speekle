@@ -162,6 +162,19 @@
       <p id="app-status" class="app-status" role="status"></p>
     </section>
 
+    <dialog id="chat-theme-dialog" class="edit-dialog">
+      <form method="dialog" id="chat-theme-form">
+        <div class="dialog-head"><strong>Оформление чата</strong><button type="button" id="close-chat-theme">✕</button></div>
+        <p class="muted">Выбери фон переписки. Настройка сохранится на этом устройстве.</p>
+        <div class="chat-theme-options">
+          <button type="button" data-chat-theme="default">Стандартный</button>
+          <button type="button" data-chat-theme="dark">Ночной</button>
+          <button type="button" data-chat-theme="light">Светлый</button>
+          <button type="button" data-chat-theme="purple">Фиолетовый</button>
+        </div>
+      </form>
+    </dialog>
+
     <dialog id="edit-profile-dialog" class="edit-dialog">
       <form id="edit-profile-form" method="dialog">
         <div class="dialog-head"><strong>Мой профиль</strong><button type="button" id="close-profile-dialog">✕</button></div>
