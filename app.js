@@ -205,9 +205,9 @@
   document.querySelectorAll(".nav-button").forEach(b=>b.addEventListener("click",()=>showPage(b.dataset.page)));
   $("settings-profile-button").addEventListener("click",()=>showPage("profile"));
   $("add-profile-button").addEventListener("click",()=>status("app-status","Добавление нескольких аккаунтов пока не подключено."));
-  document.querySelectorAll("[data-theme]").forEach(b=>b.addEventListener("click",()=>{document.documentElement.dataset.theme=b.dataset.theme==="light"?"light":"dark";document.querySelectorAll("[data-theme]").forEach(x=>x.classList.toggle("selected",x===b));localStorage.setItem("speekly-theme",b.dataset.theme);}));
+  document.querySelectorAll("[data-theme]").forEach(b=>b.addEventListener("click",()=>{document.documentElement.dataset.theme=b.dataset.theme==="light"?"light":b.dataset.theme==="auto"?(matchMedia("(prefers-color-scheme: light)").matches?"light":"dark"):"dark";document.querySelectorAll("[data-theme]").forEach(x=>x.classList.toggle("selected",x===b));localStorage.setItem("speekly-theme",b.dataset.theme);}));
   document.querySelectorAll("[data-accent]").forEach(b=>b.addEventListener("click",()=>{document.documentElement.style.setProperty("--accent",b.dataset.accent);document.querySelectorAll("[data-accent]").forEach(x=>x.classList.toggle("selected",x===b));localStorage.setItem("speekly-accent",b.dataset.accent);}));
-  const savedTheme=localStorage.getItem("speekly-theme");if(savedTheme){document.documentElement.dataset.theme=savedTheme==="light"?"light":"dark";document.querySelectorAll("[data-theme]").forEach(x=>x.classList.toggle("selected",x.dataset.theme===savedTheme));}
+  const savedTheme=localStorage.getItem("speekly-theme");if(savedTheme){document.documentElement.dataset.theme=savedTheme==="light"?"light":savedTheme==="auto"?(matchMedia("(prefers-color-scheme: light)").matches?"light":"dark"):"dark";document.querySelectorAll("[data-theme]").forEach(x=>x.classList.toggle("selected",x.dataset.theme===savedTheme));}
   const savedAccent=localStorage.getItem("speekly-accent");if(savedAccent){document.documentElement.style.setProperty("--accent",savedAccent);document.querySelectorAll("[data-accent]").forEach(x=>x.classList.toggle("selected",x.dataset.accent===savedAccent));}
   $("back-to-chats").addEventListener("click",async()=>{if(realtime){await db.removeChannel(realtime);realtime=null;}$("conversation-page").hidden=true;showPage("chats");await loadChats();});
   $("compose-button").addEventListener("click",()=>{$("new-chat-dialog").showModal();$("user-result").replaceChildren();});
@@ -238,12 +238,60 @@
     if(error)return status("edit-profile-status",error.code==="23505"?"Юзернейм уже занят.":error.message);
     profile={...profile,display_name,username};updateProfileUI();$("edit-profile-dialog").close();
   });
-  document.querySelectorAll("[data-setting]").forEach(b=>b.addEventListener("click",()=>{
-    if(b.dataset.setting==="Оформление чатов"){$("chat-theme-dialog").showModal();return;}
-    if(b.dataset.setting==="Устройства и сеансы"){status("app-status","Сессия активна на этом устройстве. Для завершения нажми «Выйти из аккаунта».");return;}
-    if(b.dataset.setting==="Помощь и диагностика"){status("app-status","Диагностика: подключение к Supabase "+(navigator.onLine?"доступно":"отсутствует")+".");return;}
-    status("app-status",b.dataset.setting+" пока не подключено к серверу.");
+  function openSettingsPanel(title, content){
+    $("settings-action-title").textContent=title;
+    $("settings-action-content").replaceChildren();
+    if(typeof content==="string"){$("settings-action-content").textContent=content;}
+    else $("settings-action-content").append(content);
+    $("settings-action-dialog").showModal();
+  }
+  function actionButton(label,fn,kind=""){
+    const b=document.createElement("button");b.type="button";b.className="settings-action-button "+kind;b.textContent=label;b.addEventListener("click",fn);return b;
+  }
+  function settingsText(value){const p=document.createElement("p");p.textContent=value;return p;}
+  document.querySelectorAll("[data-setting]").forEach(b=>b.addEventListener("click",async()=>{
+    const name=b.dataset.setting;
+    if(name==="Оформление чатов"){$("chat-theme-dialog").showModal();return;}
+    if(name==="Устройства и сеансы"){
+      const wrap=document.createElement("div");wrap.append(settingsText("Текущая сессия: это устройство. Список других устройств пока не предоставляется API проекта."));
+      wrap.append(actionButton("Завершить другие сеансы",async()=>{const {error}=await db.auth.signOut({scope:"others"});if(error)status("app-status","Не удалось завершить другие сеансы: "+error.message);else status("app-status","Другие сеансы завершены.");$("settings-action-dialog").close();}));
+      openSettingsPanel(name,wrap);return;
+    }
+    if(name==="Папки и организация"){
+      const wrap=document.createElement("div"),list=document.createElement("div"),input=document.createElement("input");input.placeholder="Название папки";input.maxLength=32;
+      const render=()=>{list.replaceChildren();const folders=JSON.parse(localStorage.getItem("speekly-folders")||"[]");if(!folders.length)list.append(settingsText("Папок пока нет."));folders.forEach((f,i)=>{const row=document.createElement("div");row.className="settings-folder-row";const label=document.createElement("span");label.textContent=f;row.append(label,actionButton("Удалить",()=>{folders.splice(i,1);localStorage.setItem("speekly-folders",JSON.stringify(folders));render();},"danger"));list.append(row);});};
+      wrap.append(input,actionButton("Создать папку",()=>{const value=input.value.trim();if(!value)return;const folders=JSON.parse(localStorage.getItem("speekly-folders")||"[]");if(!folders.includes(value))folders.push(value);localStorage.setItem("speekly-folders",JSON.stringify(folders));input.value="";render();}),list);render();openSettingsPanel(name,wrap);return;
+    }
+    if(name==="Политика конфиденциальности"){
+      const wrap=document.createElement("div");wrap.append(settingsText("Speekly хранит данные профиля и переписку в Supabase. Доступ к данным ограничивается правилами базы данных проекта. Не отправляй через приложение пароли, платёжные данные или другую особо чувствительную информацию."),settingsText("Политика является кратким описанием текущего прототипа, а не юридическим документом. Полная опубликованная политика конфиденциальности ещё не подготовлена."));openSettingsPanel(name,wrap);return;
+    }
+    if(name==="Резервная копия ключа"||name==="Ключ и восстановление"||name==="Защита переписки"){
+      openSettingsPanel(name,"В текущей версии Speekly ещё не реализовано сквозное шифрование (E2EE) и отдельный ключ восстановления. Поэтому приложение не создаёт фиктивный ключ и не предлагает скачать несуществующую резервную копию. Передавать сообщения следует только через защищённое соединение HTTPS/TLS.");return;
+    }
+    if(name==="Специальные возможности"){
+      const wrap=document.createElement("div");
+      const large=document.createElement("label");large.className="settings-toggle";const check=document.createElement("input");check.type="checkbox";check.checked=localStorage.getItem("speekly-large-text")==="1";const caption=document.createElement("span");caption.textContent="Увеличенный текст";large.append(check,caption);
+      check.addEventListener("change",()=>{document.documentElement.classList.toggle("large-text",check.checked);localStorage.setItem("speekly-large-text",check.checked?"1":"0");});
+      const motion=document.createElement("label");motion.className="settings-toggle";const reduced=document.createElement("input");reduced.type="checkbox";reduced.checked=localStorage.getItem("speekly-reduce-motion")==="1";const mcaption=document.createElement("span");mcaption.textContent="Уменьшить анимацию";motion.append(reduced,mcaption);
+      reduced.addEventListener("change",()=>{document.documentElement.classList.toggle("reduce-motion",reduced.checked);localStorage.setItem("speekly-reduce-motion",reduced.checked?"1":"0");});
+      wrap.append(large,motion);openSettingsPanel(name,wrap);return;
+    }
+    if(name==="Помощь и диагностика"){
+      const wrap=document.createElement("div");const online=navigator.onLine;wrap.append(settingsText("Интернет: "+(online?"подключён":"нет соединения")),settingsText("Supabase: "+cfg.SUPABASE_URL),settingsText("Браузер: "+navigator.userAgent));
+      wrap.append(actionButton("Проверить соединение с сервером",async()=>{const {error}=await db.auth.getSession();status("app-status",error?"Ошибка Supabase: "+error.message:"Соединение с Supabase доступно.");}));openSettingsPanel(name,wrap);return;
+    }
+    if(name==="Проверить уведомление"||name==="Push-уведомления"){
+      if(!("Notification"in window)){openSettingsPanel(name,"Этот браузер не поддерживает Web Notifications.");return;}
+      const wrap=document.createElement("div");wrap.append(settingsText("Разрешение браузера: "+Notification.permission));
+      wrap.append(actionButton("Разрешить уведомления",async()=>{const result=await Notification.requestPermission();$("push-setting-value").textContent=result==="granted"?"Разрешены":result==="denied"?"Запрещены":"Не выбрано";status("app-status","Разрешение уведомлений: "+result);}));
+      wrap.append(actionButton("Отправить тестовое уведомление",async()=>{if(Notification.permission!=="granted"){status("app-status","Сначала разреши уведомления.");return;}new Notification("Speekly",{body:"Тестовое уведомление работает."});status("app-status","Тестовое уведомление отправлено.");}));
+      openSettingsPanel(name,wrap);return;
+    }
   }));
+  $("close-settings-action").addEventListener("click",()=>$("settings-action-dialog").close());
+  $("push-setting-value").textContent=("Notification"in window)?(Notification.permission==="granted"?"Разрешены":Notification.permission==="denied"?"Запрещены":"Не выбрано"):"Нет поддержки";
+  document.documentElement.classList.toggle("large-text",localStorage.getItem("speekly-large-text")==="1");
+  document.documentElement.classList.toggle("reduce-motion",localStorage.getItem("speekly-reduce-motion")==="1");
   const chatThemeNames=["default","dark","light","purple"];
   function applyChatTheme(theme){
     const chosen=chatThemeNames.includes(theme)?theme:"default";
