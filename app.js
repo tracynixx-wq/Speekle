@@ -12,9 +12,9 @@
   function initials(name){return (name||"S").trim().split(/\s+/).slice(0,2).map(x=>x[0]||"").join("").toUpperCase()||"S";}
   function avatar(name,kind=""){const el=document.createElement("div");el.className="chat-avatar "+kind;el.textContent=initials(name);return el;}
   function showPage(page){
-    ["chats","contacts","settings"].forEach(name=>$(name+"-page").hidden=name!==page);
+    ["chats","contacts","profile","settings"].forEach(name=>{const el=$(name+"-page");if(el)el.hidden=name!==page;});
     $("conversation-page").hidden=true;$("bottom-nav").hidden=false;
-    $("top-title").textContent=page==="chats"?"Чаты":page==="contacts"?"Контакты":"Настройки";
+    $("top-title").textContent=page==="chats"?"Чаты":page==="contacts"?"Контакты":page==="profile"?"Профиль":"Настройки";
     document.querySelectorAll(".nav-button").forEach(b=>b.classList.toggle("active",b.dataset.page===page));
     $("top-left").textContent=page==="chats"?(editMode?"Готово":"Изм."):"";
     $("search-panel").hidden=true;
@@ -192,6 +192,12 @@
   });
 
   document.querySelectorAll(".nav-button").forEach(b=>b.addEventListener("click",()=>showPage(b.dataset.page)));
+  $("settings-profile-button").addEventListener("click",()=>showPage("profile"));
+  $("add-profile-button").addEventListener("click",()=>status("app-status","Добавление нескольких аккаунтов пока не подключено."));
+  document.querySelectorAll("[data-theme]").forEach(b=>b.addEventListener("click",()=>{document.documentElement.dataset.theme=b.dataset.theme==="light"?"light":"dark";document.querySelectorAll("[data-theme]").forEach(x=>x.classList.toggle("selected",x===b));localStorage.setItem("speekly-theme",b.dataset.theme);}));
+  document.querySelectorAll("[data-accent]").forEach(b=>b.addEventListener("click",()=>{document.documentElement.style.setProperty("--accent",b.dataset.accent);document.querySelectorAll("[data-accent]").forEach(x=>x.classList.toggle("selected",x===b));localStorage.setItem("speekly-accent",b.dataset.accent);}));
+  const savedTheme=localStorage.getItem("speekly-theme");if(savedTheme){document.documentElement.dataset.theme=savedTheme==="light"?"light":"dark";document.querySelectorAll("[data-theme]").forEach(x=>x.classList.toggle("selected",x.dataset.theme===savedTheme));}
+  const savedAccent=localStorage.getItem("speekly-accent");if(savedAccent){document.documentElement.style.setProperty("--accent",savedAccent);document.querySelectorAll("[data-accent]").forEach(x=>x.classList.toggle("selected",x.dataset.accent===savedAccent));}
   $("back-to-chats").addEventListener("click",async()=>{if(realtime){await db.removeChannel(realtime);realtime=null;}$("conversation-page").hidden=true;showPage("chats");await loadChats();});
   $("compose-button").addEventListener("click",()=>{$("new-chat-dialog").showModal();$("user-result").replaceChildren();});
   $("close-new-chat").addEventListener("click",()=>$("new-chat-dialog").close());
