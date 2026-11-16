@@ -24,7 +24,7 @@
     const {data:{session}}=await db.auth.getSession();
     user=session?.user||null;authView.hidden=!!user;profileView.hidden=true;mainView.hidden=true;
     if(!user)return;
-    const {data:p,error}=await db.from("profiles").select("id,display_name,username").eq("id",user.id).maybeSingle();
+    const {data:p,error}=await db.from("profiles").select("id,display_name,username,avatar_url").eq("id",user.id).maybeSingle();
     if(error){status("auth-status",error.message);authView.hidden=false;return;}
     profile=p;
     if(!p?.display_name||!p?.username){profileView.hidden=false;$("display-name").value=p?.display_name||"";$("username").value=p?.username||"";return;}
@@ -37,7 +37,7 @@
   function updateProfileUI(){
     $("profile-name").textContent=profile.display_name;
     $("profile-handle").textContent="@"+profile.username;
-    $("profile-avatar").textContent=initials(profile.display_name);
+    if(profile.avatar_url){$("profile-avatar").textContent="";$("profile-avatar").style.backgroundImage="url("+JSON.stringify(profile.avatar_url)+")";$("profile-avatar").style.backgroundSize="cover";$("profile-avatar").style.backgroundPosition="center";}else{$("profile-avatar").style.backgroundImage="";$("profile-avatar").textContent=initials(profile.display_name);}
     $("settings-username").textContent="@"+profile.username;
     $("account-label")?.replaceChildren();
   }
@@ -198,6 +198,20 @@
   $("search-toggle").addEventListener("click",()=>{$("search-panel").hidden=!$("search-panel").hidden;if(!$("search-panel").hidden)$("global-search").focus();});
   $("global-search").addEventListener("input",filterChats);
   $("top-left").addEventListener("click",()=>{editMode=!editMode;$("top-left").textContent=editMode?"Готово":"Изм.";loadChats();});
+  $("choose-avatar-button").addEventListener("click",()=>$("avatar-file").click());
+  $("avatar-file").addEventListener("change",async()=>{
+    const file=$("avatar-file").files?.[0];if(!file)return;
+    if(file.size>5*1024*1024){status("app-status","Фото должно быть меньше 5 МБ.");return;}
+    const ext=file.type==="image/png"?"png":file.type==="image/webp"?"webp":"jpg";
+    const path=user.id+"/avatar-"+Date.now()+"."+ext;
+    status("app-status","Загружаем фотографию…");
+    const {error:uploadError}=await db.storage.from("avatars").upload(path,file,{upsert:true,contentType:file.type});
+    if(uploadError){status("app-status","Не удалось загрузить фото: "+uploadError.message);return;}
+    const {data}=db.storage.from("avatars").getPublicUrl(path);
+    const {error:updateError}=await db.from("profiles").update({avatar_url:data.publicUrl}).eq("id",user.id);
+    if(updateError){status("app-status",updateError.message);return;}
+    profile={...profile,avatar_url:data.publicUrl};updateProfileUI();status("app-status","Фотография профиля обновлена.");
+  });
   $("edit-profile-button").addEventListener("click",()=>{$("edit-display-name").value=profile.display_name;$("edit-username").value=profile.username;$("edit-profile-status").textContent="";$("edit-profile-dialog").showModal();});
   $("close-profile-dialog").addEventListener("click",()=>$("edit-profile-dialog").close());
   $("edit-profile-form").addEventListener("submit",async e=>{
