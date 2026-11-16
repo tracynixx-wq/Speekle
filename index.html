@@ -23,6 +23,19 @@
       </form>
       <p id="auth-status" role="status"></p>
     </section>
+
+    <section id="profile-view" class="panel" hidden>
+      <h1>Создай профиль</h1>
+      <p>Как тебя будут видеть другие пользователи Speekly?</p>
+      <form id="profile-form">
+        <label>Имя<input id="display-name" maxlength="40" placeholder="Например, Алексей" required></label>
+        <label>Юзернейм<input id="username" minlength="3" maxlength="24" pattern="[A-Za-z0-9_]+" autocomplete="username" placeholder="например, alex_01" required></label>
+        <p class="hint">От 3 до 24 символов: латинские буквы, цифры и _</p>
+        <button type="submit">Сохранить профиль</button>
+      </form>
+      <p id="profile-status" role="status"></p>
+    </section>
+
     <section id="chat-view" hidden>
       <header>
         <strong>Speekly</strong>
@@ -32,14 +45,15 @@
       <div class="workspace">
         <aside>
           <form id="new-chat-form">
-            <label>Новый чат · UUID пользователя<input id="peer-id" placeholder="UUID собеседника" required></label>
-            <button type="submit">Создать чат</button>
+            <label>Найти пользователя<input id="peer-username" placeholder="@username" maxlength="24" required></label>
+            <button type="submit">Найти</button>
           </form>
+          <div id="user-result" aria-live="polite"></div>
           <h2>Чаты</h2>
           <ul id="chat-list"></ul>
         </aside>
         <section class="messages-panel">
-          <div id="empty-state">Выберите чат или создайте новый.</div>
+          <div id="empty-state">Выберите чат или найдите пользователя.</div>
           <div id="conversation" hidden>
             <h2 id="conversation-title">Диалог</h2>
             <ol id="messages"></ol>
