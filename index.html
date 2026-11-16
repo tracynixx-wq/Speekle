@@ -2,10 +2,20 @@
 <html lang="ru">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
   <meta name="theme-color" content="#ffffff">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <style>html,body{touch-action:pan-x pan-y;overscroll-behavior:none}</style>
+  <script>
+    // Prevent pinch-to-zoom inside the app on iOS Safari.
+    document.addEventListener("gesturestart", event => event.preventDefault(), {passive:false});
+    document.addEventListener("gesturechange", event => event.preventDefault(), {passive:false});
+    document.addEventListener("gestureend", event => event.preventDefault(), {passive:false});
+    document.addEventListener("touchmove", event => {
+      if (event.touches && event.touches.length > 1) event.preventDefault();
+    }, {passive:false});
+  </script>
   <link rel="manifest" href="./manifest.webmanifest">
   <link rel="stylesheet" href="./style.css">
   <title>Speekly</title>
