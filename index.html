@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#111827">
+  <meta name="description" content="Speekly — messenger">
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="stylesheet" href="./style.css">
+  <title>Speekly</title>
+</head>
+<body>
+  <main id="app">
+    <section id="auth-view" class="panel">
+      <h1>Speekly</h1>
+      <form id="auth-form">
+        <label>Email<input id="email" type="email" autocomplete="email" required></label>
+        <label>Пароль<input id="password" type="password" minlength="6" autocomplete="current-password" required></label>
+        <div class="actions">
+          <button type="submit" id="login-button">Войти</button>
+          <button type="button" id="signup-button" class="secondary">Регистрация</button>
+        </div>
+      </form>
+      <p id="auth-status" role="status"></p>
+    </section>
+    <section id="chat-view" hidden>
+      <header>
+        <strong>Speekly</strong>
+        <span id="account-label"></span>
+        <button id="logout-button" class="secondary">Выйти</button>
+      </header>
+      <div class="workspace">
+        <aside>
+          <form id="new-chat-form">
+            <label>Новый чат · UUID пользователя<input id="peer-id" placeholder="UUID собеседника" required></label>
+            <button type="submit">Создать чат</button>
+          </form>
+          <h2>Чаты</h2>
+          <ul id="chat-list"></ul>
+        </aside>
+        <section class="messages-panel">
+          <div id="empty-state">Выберите чат или создайте новый.</div>
+          <div id="conversation" hidden>
+            <h2 id="conversation-title">Диалог</h2>
+            <ol id="messages"></ol>
+            <form id="message-form">
+              <input id="message-input" maxlength="4000" placeholder="Сообщение…" autocomplete="off" required>
+              <button type="submit">Отправить</button>
+            </form>
+          </div>
+        </section>
+      </div>
+      <p id="app-status" role="status"></p>
+    </section>
+  </main>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="./config.js"></script>
+  <script src="./app.js"></script>
+</body>
+</html>
