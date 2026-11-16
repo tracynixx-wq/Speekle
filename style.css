@@ -179,7 +179,6 @@ button:active{background:#f4f4f4!important}
 .setting-icon{width:23px;height:23px;border:1px solid #111;background:#fff;color:#111}
 .chevron{font-size:17px;color:#111}
 .bottom-nav{
-  display:grid!important;
   height:52px!important;
   width:min(92vw,420px)!important;
   bottom:calc(6px + env(safe-area-inset-bottom))!important;
