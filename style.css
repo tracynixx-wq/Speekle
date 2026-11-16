@@ -10,3 +10,28 @@
 :root[data-theme="light"]{color-scheme:light;--bg:#f7f7fa;--surface:#fff;--surface2:#eeeef2;--line:#dedee5;--text:#17171c;--muted:#777782}.theme-light .profile-switcher,.theme-light .setting-card,.theme-light .setting-row{background:#fff}.theme-light .theme-switch{background:#e8e8ed}.theme-light .theme-switch button.selected{background:#fff}.theme-light .bottom-nav{background:rgba(255,255,255,.96)}
 @media(max-width:480px){.profile-page{padding-top:145px}.profile-cover{height:270px;border-radius:34px;padding:18px}.profile-avatar{width:100px;height:100px;left:18px;bottom:20px}.profile-cover-info{margin-left:130px}.profile-cover-info h1{font-size:26px}.profile-cover-info p{font-size:15px}.profile-edit-button{width:78%;height:58px;font-size:15px}.profile-switcher{padding:20px 16px}.settings-page{padding-top:165px}.settings-heading{margin-bottom:42px}.settings-heading h1{font-size:32px}.settings-user .chat-avatar{width:48px;height:48px}.settings-user small{max-width:88px;overflow:hidden;text-overflow:ellipsis}.setting-row{min-height:70px;font-size:16px}.setting-icon{width:44px;height:44px}.accent-colors button{width:40px;height:40px}}
 @media(min-width:700px){#app{max-width:760px}.chat-list{padding:0 24px}.profile-page,.settings-page{padding-left:28px;padding-right:28px}}
+
+
+/* Stable iPhone layout alignment */
+#main-view{width:100%;max-width:100%;min-height:100dvh;overflow-x:hidden}
+.topbar{height:250px!important;min-height:250px!important;padding:0 24px 14px!important;display:flex!important;align-items:flex-end!important;justify-content:flex-start!important;position:relative!important}
+.topbar .top-title{font-size:46px!important;line-height:1.05!important;letter-spacing:-1.5px!important;margin:0!important;padding:0!important}
+.topbar .top-actions{position:absolute!important;top:18px!important;right:16px!important;left:auto!important;align-self:auto!important;display:flex!important;align-items:center!important;justify-content:center!important}
+.topbar .compose-button{display:grid!important;place-items:center!important;width:56px!important;height:56px!important;min-width:56px!important;padding:0!important;line-height:1!important;font-size:32px!important;border-radius:50%!important;margin:0!important}
+#search-panel{width:100%;padding:0 16px 16px!important;margin:0!important}
+#search-panel input{display:block;width:100%;height:48px!important;min-height:48px!important;border-radius:28px!important;padding:0 18px 0 48px!important;font-size:18px!important;margin:0!important}
+.chat-list{width:100%;padding:0 16px!important;margin:0!important}
+.chat-row{width:100%;min-width:0;margin:0 0 3px!important}
+.bottom-nav{width:calc(100% - 32px)!important;max-width:560px!important;height:78px!important;left:50%!important;right:auto!important;transform:translateX(-50%)!important;display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:4px!important;padding:5px!important}
+.bottom-nav .nav-button{width:100%!important;min-width:0!important;max-width:none!important;margin:0!important;padding:4px 2px!important;display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:2px!important;white-space:nowrap!important;overflow:hidden!important;border-radius:42px!important}
+.bottom-nav .nav-button .nav-symbol{display:block!important;line-height:1.05!important;font-size:27px!important}
+.bottom-nav .nav-button span:last-of-type{display:block!important;font-size:14px!important;line-height:1.15!important}
+.profile-page{width:100%;padding-left:16px!important;padding-right:16px!important}
+.profile-edit-button{display:flex!important;position:relative!important;left:auto!important;right:auto!important;transform:none!important;margin:0 auto 36px!important;max-width:470px!important}
+.profile-switcher{width:100%!important;max-width:none!important}
+.settings-page{width:100%;padding-left:16px!important;padding-right:16px!important}
+.settings-group,.setting-row,.setting-card{width:100%;min-width:0}
+.setting-row{display:flex!important;align-items:center!important}
+.setting-row>span:nth-child(2){min-width:0;flex:1}
+.setting-row .chevron,.setting-row .setting-value{flex:none;margin-left:auto}
+@media(max-width:390px){.topbar{height:238px!important;min-height:238px!important}.topbar .top-title{font-size:43px!important}.bottom-nav{width:calc(100% - 28px)!important}.bottom-nav .nav-button span:last-of-type{font-size:13px!important}.profile-cover-info{margin-left:122px!important}.profile-cover-info h1{font-size:24px!important}}
