@@ -54,9 +54,9 @@
 
     <section id="main-view" hidden>
       <header class="topbar">
-        <div class="top-title"><strong id="top-title">Чаты</strong></div>
+        <button id="top-left" class="top-left">Изм.</button><div class="top-title"><strong id="top-title">Чаты</strong></div>
         <div class="top-actions">
-          <button id="search-toggle" class="circle-button" aria-label="Поиск" hidden>⌕</button>
+          
           <button id="compose-button" class="compose-button" aria-label="Новое сообщение">＋</button>
         </div>
       </header>
@@ -78,7 +78,7 @@
       <section id="profile-page" class="page profile-page" hidden>
         <div class="profile-cover">
           <div class="profile-cover-shade"></div>
-          <div id="profile-avatar" class="profile-avatar">S</div>
+          <button type="button" id="choose-avatar-button" class="profile-avatar" aria-label="Изменить фотографию профиля">S</button>
           <div class="profile-cover-info">
             <h1 id="profile-name">Имя</h1>
             <p class="online-line"><i></i> был(а) недавно</p>
