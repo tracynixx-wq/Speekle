@@ -87,3 +87,46 @@ input:focus{border:1.5px solid #111;box-shadow:0 0 0 2px #ddd}
 .user-result{padding-top:10px}
 .user-result button{border:1px solid #111;border-radius:9px;background:#111;color:white;padding:9px 13px}
 @media(min-width:700px){#app{max-width:760px}.chat-row{padding-left:24px;padding-right:24px}.settings-group{margin-left:24px;margin-right:24px}.topbar{padding-left:24px;padding-right:24px}}
+
+
+/* Compact white UI: every button is white with a clear black outline. */
+:root{color-scheme:light;--bg:#fff;--panel:#fff;--line:#111;--text:#111;--muted:#666;--button:#fff;--button-text:#111}
+html,body,#app,.conversation-page{background:#fff!important;color:#111!important}
+button,.auth-actions button,.form-card button,.edit-dialog button[type=submit],
+.top-text-button,.circle-button,.compose-button,.setting-row,.nav-button,
+.back-button,.message-composer button,.contact-row button,.dialog-head button,
+.user-result button{
+  background:#fff!important;color:#111!important;border:1.5px solid #111!important;
+  box-shadow:none!important;border-radius:9px!important;font-weight:600;
+}
+button:active,.nav-button.active{background:#f0f0f0!important;border-width:2px!important}
+.button-muted{background:#fff!important;color:#111!important;border:1.5px solid #111!important}
+.auth-card,.form-card,.settings-group{background:#fff!important;border:1px solid #ddd!important}
+.topbar{height:62px;padding:7px 12px;background:#fff!important}
+.top-text-button{padding:6px 10px!important;font-size:13px!important}
+.circle-button,.compose-button{width:34px!important;height:34px!important;font-size:18px!important}
+.chat-row{min-height:64px;padding:8px 12px}
+.chat-avatar{width:40px;height:40px;font-size:17px}
+.profile-avatar{width:76px;height:76px;font-size:32px}
+.profile-hero{padding:18px 14px}
+.profile-hero h1{font-size:24px}
+.settings-group{border-radius:14px;margin:0 12px 12px;padding:7px}
+.setting-row{min-height:39px!important;padding:6px 8px!important;margin:4px 0!important;font-size:13px!important;gap:8px}
+.setting-icon{width:25px;height:25px;font-size:15px;border:1px solid #111;border-radius:7px}
+.chevron{color:#111;font-size:18px}
+.setting-value{color:#555}
+.bottom-nav{height:56px!important;width:min(92vw,500px)!important;padding:4px!important;gap:4px!important;border:1.5px solid #111!important;border-radius:13px!important;background:#fff!important;box-shadow:none!important}
+.nav-button{border-radius:8px!important;font-size:10px!important;padding:2px!important;gap:0!important}
+.nav-symbol{font-size:15px!important}
+.nav-button.active{background:#f1f1f1!important;color:#111!important;border:2px solid #111!important}
+.conversation-header{height:52px;padding:0 10px}
+.back-button{width:32px;height:32px;font-size:23px}
+.small-avatar{width:32px;height:32px}
+.message-composer{padding:7px 10px}
+.message-composer button{width:34px;height:34px;font-size:16px}
+input{padding:9px 10px;border-radius:8px}
+.auth-card label,.form-card label,.edit-dialog label{font-size:13px;margin:11px 0}
+.auth-actions{gap:7px}
+.auth-actions button,.form-card button,.edit-dialog button[type=submit]{padding:8px 10px!important;font-size:13px!important}
+.brand-mark{width:46px;height:46px;font-size:25px;border-radius:13px}
+h1{font-size:27px}
