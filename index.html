@@ -74,7 +74,8 @@
           <p id="profile-handle">@username</p>
         </div>
         <div class="settings-group profile-edit-group">
-          <button class="setting-row blue-row" id="edit-profile-button"><span class="setting-icon camera-icon">◎</span><span>Изменить профиль</span><span class="chevron">›</span></button>
+          <button class="setting-row blue-row" id="choose-avatar-button"><span class="setting-icon camera-icon">◎</span><span>Выбрать фотографию</span><span class="chevron">›</span></button>
+          <button class="setting-row blue-row" id="edit-profile-button"><span class="setting-icon user-icon">＠</span><span>Изменить имя и юзернейм</span><span class="chevron">›</span></button>
           <div class="setting-row"><span class="setting-icon user-icon">＠</span><span id="settings-username">@username</span></div>
         </div>
         <div class="settings-group">
@@ -115,6 +116,7 @@
         <button class="nav-button active" data-page="chats"><span class="nav-symbol">●●</span><span>Чаты</span><i id="unread-badge" hidden>2</i></button>
         <button class="nav-button" data-page="settings"><span class="nav-symbol">●</span><span>Настройки</span></button>
       </nav>
+      <input id="avatar-file" type="file" accept="image/png,image/jpeg,image/webp" hidden>
       <p id="app-status" class="app-status" role="status"></p>
     </section>
 
