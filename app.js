@@ -37,9 +37,17 @@
   function updateProfileUI(){
     $("profile-name").textContent=profile.display_name;
     $("profile-handle").textContent="@"+profile.username;
-    if(profile.avatar_url){$("profile-avatar").textContent="";$("profile-avatar").style.backgroundImage="url("+JSON.stringify(profile.avatar_url)+")";$("profile-avatar").style.backgroundSize="cover";$("profile-avatar").style.backgroundPosition="center";}else{$("profile-avatar").style.backgroundImage="";$("profile-avatar").textContent=initials(profile.display_name);}
-    $("settings-username").textContent="@"+profile.username;
-    $("account-label")?.replaceChildren();
+    const avatarUrl=profile.avatar_url||"";
+    ["profile-avatar","profile-small-avatar","settings-avatar"].forEach(id=>{
+      const el=$(id);if(!el)return;
+      el.textContent=avatarUrl?"":initials(profile.display_name);
+      el.style.backgroundImage=avatarUrl?"url("+JSON.stringify(avatarUrl)+")":"";
+      el.style.backgroundSize="cover";el.style.backgroundPosition="center";
+    });
+    $("profile-account-name").textContent=profile.display_name;
+    $("profile-account-email").textContent=user?.email||"";
+    $("settings-name").textContent=profile.display_name;
+    $("settings-handle").textContent="@"+profile.username;
   }
 
   $("auth-form").addEventListener("submit",async e=>{
