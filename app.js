@@ -260,7 +260,7 @@
   db.auth.onAuthStateChange((event,session)=>{
     if(event==="SIGNED_OUT"){sessionRun++;user=null;profile=null;authView.hidden=false;profileView.hidden=true;mainView.hidden=true;return;}
     if(event==="SIGNED_IN"||event==="INITIAL_SESSION"||event==="USER_UPDATED"){
-      sessionLoad=sessionLoad.then(()=>showSession()).catch(error=>status("auth-status",error.message));
+      setTimeout(()=>{sessionLoad=sessionLoad.then(()=>showSession()).catch(error=>status("auth-status",error.message));},0);
     }
   });
   showSession();
