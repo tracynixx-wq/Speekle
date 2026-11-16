@@ -6,8 +6,8 @@
   if (!window.supabase || !cfg.SUPABASE_URL || !cfg.SUPABASE_ANON_KEY) {
     status("auth-status","Не удалось подключиться к серверу. Проверь config.js."); return;
   }
-  const db=window.supabase.createClient(cfg.SUPABASE_URL,cfg.SUPABASE_ANON_KEY);
-  let user=null, profile=null, activeChat=null, realtime=null, allContacts=[], chatRows=[], editMode=false;
+  const db=window.supabase.createClient(cfg.SUPABASE_URL,cfg.SUPABASE_ANON_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true,storage:window.localStorage,storageKey:"speekly-auth-v1"}});
+  let user=null, profile=null, activeChat=null, realtime=null, allContacts=[], chatRows=[], editMode=false, sessionLoad=Promise.resolve(), sessionRun=0;
 
   function initials(name){return (name||"S").trim().split(/\s+/).slice(0,2).map(x=>x[0]||"").join("").toUpperCase()||"S";}
   function avatar(name,kind=""){const el=document.createElement("div");el.className="chat-avatar "+kind;el.textContent=initials(name);return el;}
@@ -21,10 +21,13 @@
     if(page==="contacts")loadContacts();
   }
   async function showSession(){
+    const run=++sessionRun;
     const {data:{session}}=await db.auth.getSession();
+    if(run!==sessionRun)return;
     user=session?.user||null;authView.hidden=!!user;profileView.hidden=true;mainView.hidden=true;
     if(!user)return;
     const {data:p,error}=await db.from("profiles").select("id,display_name,username,avatar_url").eq("id",user.id).maybeSingle();
+    if(run!==sessionRun)return;
     if(error){status("auth-status",error.message);authView.hidden=false;return;}
     profile=p;
     if(!p?.display_name||!p?.username){profileView.hidden=false;$("display-name").value=p?.display_name||"";$("username").value=p?.username||"";return;}
@@ -235,10 +238,31 @@
     if(error)return status("edit-profile-status",error.code==="23505"?"Юзернейм уже занят.":error.message);
     profile={...profile,display_name,username};updateProfileUI();$("edit-profile-dialog").close();
   });
-  document.querySelectorAll("[data-setting]").forEach(b=>b.addEventListener("click",()=>status("app-status",b.dataset.setting+" — раздел пока в разработке.")));
+  document.querySelectorAll("[data-setting]").forEach(b=>b.addEventListener("click",()=>{
+    if(b.dataset.setting==="Оформление чатов"){$("chat-theme-dialog").showModal();return;}
+    if(b.dataset.setting==="Устройства и сеансы"){status("app-status","Сессия активна на этом устройстве. Для завершения нажми «Выйти из аккаунта».");return;}
+    if(b.dataset.setting==="Помощь и диагностика"){status("app-status","Диагностика: подключение к Supabase "+(navigator.onLine?"доступно":"отсутствует")+".");return;}
+    status("app-status",b.dataset.setting+" пока не подключено к серверу.");
+  }));
+  const chatThemeNames=["default","dark","light","purple"];
+  function applyChatTheme(theme){
+    const chosen=chatThemeNames.includes(theme)?theme:"default";
+    document.documentElement.dataset.chatTheme=chosen;
+    localStorage.setItem("speekly-chat-theme",chosen);
+    document.querySelectorAll("[data-chat-theme]").forEach(x=>x.classList.toggle("selected",x.dataset.chatTheme===chosen));
+  }
+  applyChatTheme(localStorage.getItem("speekly-chat-theme")||"default");
+  document.querySelectorAll("[data-chat-theme]").forEach(b=>b.addEventListener("click",()=>{applyChatTheme(b.dataset.chatTheme);$("chat-theme-dialog").close();}));
+  $("close-chat-theme").addEventListener("click",()=>$("chat-theme-dialog").close());
+  $("conversation-more").addEventListener("click",()=>{$("chat-theme-dialog").showModal();});
   $("logout-button").addEventListener("click",async()=>{if(realtime)await db.removeChannel(realtime);await db.auth.signOut();activeChat=null;await showSession();});
 
-  db.auth.onAuthStateChange(()=>{setTimeout(showSession,0);});
+  db.auth.onAuthStateChange((event,session)=>{
+    if(event==="SIGNED_OUT"){sessionRun++;user=null;profile=null;authView.hidden=false;profileView.hidden=true;mainView.hidden=true;return;}
+    if(event==="SIGNED_IN"||event==="INITIAL_SESSION"||event==="USER_UPDATED"){
+      sessionLoad=sessionLoad.then(()=>showSession()).catch(error=>status("auth-status",error.message));
+    }
+  });
   showSession();
   if("serviceWorker"in navigator)navigator.serviceWorker.register("./sw.js").catch(()=>{});
 })();
