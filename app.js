@@ -16,7 +16,7 @@
     $("conversation-page").hidden=true;$("bottom-nav").hidden=false;$("app").querySelector(".topbar").hidden=page!=="chats";
     $("top-title").textContent=page==="chats"?"Чаты":page==="contacts"?"Контакты":page==="profile"?"Профиль":"Настройки";
     document.querySelectorAll(".nav-button").forEach(b=>b.classList.toggle("active",b.dataset.page===page));
-    $("top-left").textContent=page==="chats"?(editMode?"Готово":"Изм."):"";
+    if($("top-left"))$("top-left").textContent=page==="chats"?(editMode?"Готово":"Изм."):"";
     $("search-panel").hidden=page!=="chats";
     if(page==="contacts")loadContacts();
   }
@@ -209,7 +209,7 @@
   $("back-to-chats").addEventListener("click",async()=>{if(realtime){await db.removeChannel(realtime);realtime=null;}$("conversation-page").hidden=true;showPage("chats");await loadChats();});
   $("compose-button").addEventListener("click",()=>{$("new-chat-dialog").showModal();$("user-result").replaceChildren();});
   $("close-new-chat").addEventListener("click",()=>$("new-chat-dialog").close());
-  $("search-toggle").addEventListener("click",()=>{$("search-panel").hidden=!$("search-panel").hidden;if(!$("search-panel").hidden)$("global-search").focus();});
+
   $("global-search").addEventListener("input",filterChats);
   $("top-left").addEventListener("click",()=>{editMode=!editMode;$("top-left").textContent=editMode?"Готово":"Изм.";loadChats();});
   $("choose-avatar-button").addEventListener("click",()=>$("avatar-file").click());
