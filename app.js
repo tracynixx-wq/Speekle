@@ -41,7 +41,7 @@
     $("profile-name").textContent=profile.display_name;
     $("profile-handle").textContent="@"+profile.username;
     const avatarUrl=profile.avatar_url||"";
-    ["profile-avatar","profile-small-avatar","settings-avatar"].forEach(id=>{
+    ["choose-avatar-button","profile-small-avatar","settings-avatar"].forEach(id=>{
       const el=$(id);if(!el)return;
       el.textContent=avatarUrl?"":initials(profile.display_name);
       el.style.backgroundImage=avatarUrl?"url("+JSON.stringify(avatarUrl)+")":"";
