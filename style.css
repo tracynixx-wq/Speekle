@@ -145,7 +145,7 @@ html,body,#app{width:100%;background:#fff;color:#111}
 button,.top-text-button,.circle-button,.compose-button,.setting-row,
 .nav-button,.back-button,.message-composer button,.contact-row button,
 .dialog-head button,.user-result button,.auth-actions button,
-.form-card button,.edit-dialog button[type=submit){
+.form-card button,.edit-dialog button[type=submit]{
   background:#fff!important;
   color:#111!important;
   border:1px solid #111!important;
