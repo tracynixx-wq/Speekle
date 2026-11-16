@@ -56,7 +56,7 @@
   $("profile-form").addEventListener("submit", async e => {
     e.preventDefault();
     const display_name = $("display-name").value.trim();
-    const username = $("username").value.trim().replace(/^@/, "");
+    const username = $("username").value.trim().replace(/^@/, "").toLowerCase();
     if (display_name.length < 2) return status("profile-status", "Имя должно содержать минимум 2 символа.");
     if (!/^[A-Za-z0-9_]{3,24}$/.test(username)) return status("profile-status", "Юзернейм: 3–24 символа, латинские буквы, цифры или _.");
     status("profile-status", "Сохраняем профиль…");
@@ -132,12 +132,12 @@
 
   $("new-chat-form").addEventListener("submit", async e => {
     e.preventDefault();
-    const username = $("peer-username").value.trim().replace(/^@/, "");
+    const username = $("peer-username").value.trim().replace(/^@/, "").toLowerCase();
     if (!username) return;
     status("app-status", "Ищем пользователя…");
     $("user-result").replaceChildren();
     const { data: peer, error } = await db.from("profiles")
-      .select("id, username, display_name").ilike("username", username).maybeSingle();
+      .select("id, username, display_name").eq("username", username).maybeSingle();
     if (error) return status("app-status", error.message);
     if (!peer) return status("app-status", "Пользователь не найден. Проверь юзернейм.");
     if (peer.id === user.id) return status("app-status", "Это твой собственный профиль.");
