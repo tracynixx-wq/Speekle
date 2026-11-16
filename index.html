@@ -127,12 +127,12 @@
         </div>
         <h2 class="settings-label">БЕЗОПАСНОСТЬ И КОНФИДЕНЦИАЛЬНОСТЬ</h2>
         <div class="settings-group">
-          <div class="setting-row"><span class="setting-icon">♢</span><span>Шифрование переписки</span><span class="setting-value">Включено</span></div>
+          <button class="setting-row" data-setting="Защита переписки"><span class="setting-icon">♢</span><span>Защита переписки</span><span class="setting-value">TLS</span></button>
           <button class="setting-row" data-setting="Ключ и восстановление"><span class="setting-icon">⚿</span><span>Ключ и восстановление</span><span class="chevron">›</span></button>
         </div>
         <h2 class="settings-label">УВЕДОМЛЕНИЯ</h2>
         <div class="settings-group">
-          <div class="setting-row"><span class="setting-icon">♧</span><span>Push-уведомления</span><span class="setting-value">Включены</span></div>
+          <button class="setting-row" data-setting="Push-уведомления"><span class="setting-icon">♧</span><span>Push-уведомления</span><span class="setting-value" id="push-setting-value">Проверить</span></button>
           <button class="setting-row" data-setting="Проверить уведомление"><span class="setting-icon">♧</span><span>Проверить уведомление</span><span class="chevron">›</span></button>
         </div>
         <p class="settings-note">Ключ шифрования хранится на этом устройстве. Для входа с другого телефона понадобится ключевая фраза.</p>
@@ -161,6 +161,8 @@
       <input id="avatar-file" type="file" accept="image/png,image/jpeg,image/webp" hidden>
       <p id="app-status" class="app-status" role="status"></p>
     </section>
+
+    <dialog id="settings-action-dialog" class="edit-dialog"><div class="dialog-head"><strong id="settings-action-title">Настройка</strong><button type="button" id="close-settings-action">✕</button></div><div id="settings-action-content" class="settings-action-content"></div></dialog>
 
     <dialog id="chat-theme-dialog" class="edit-dialog">
       <form method="dialog" id="chat-theme-form">
